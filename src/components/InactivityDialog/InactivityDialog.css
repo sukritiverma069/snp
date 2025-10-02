@@ -1,0 +1,230 @@
+.inactivity-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.inactivity-dialog {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 450px;
+    width: 90%;
+    max-height: 90vh;
+    overflow: hidden;
+    animation: slideIn 0.3s ease-out;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.dialog-header {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+}
+
+.warning-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
+    animation: pulse 2s infinite;
+}
+
+.dialog-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.dialog-content {
+    padding: 2rem;
+    text-align: center;
+}
+
+.dialog-content p {
+    margin: 0 0 1rem 0;
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.countdown-timer {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #ff6b6b;
+    margin: 1.5rem 0;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
+    animation: timerPulse 1s infinite;
+}
+
+.warning-text {
+    color: #666;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+.dialog-actions {
+    padding: 0 2rem 1.5rem 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.extend-button,
+.logout-button {
+    flex: 1;
+    padding: 0.875rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.extend-button {
+    background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+}
+
+.extend-button:hover {
+    background: linear-gradient(135deg, #00a085 0%, #008f76 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+}
+
+.logout-button {
+    background: #f8f9fa;
+    color: #666;
+    border: 2px solid #e9ecef;
+}
+
+.logout-button:hover {
+    background: #e9ecef;
+    color: #333;
+    transform: translateY(-2px);
+}
+
+.dialog-footer {
+    background: #f8f9fa;
+    padding: 1rem 2rem;
+    text-align: center;
+    border-top: 1px solid #e9ecef;
+}
+
+.dialog-footer small {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes timerPulse {
+    0%, 100% {
+        transform: scale(1);
+        color: #ff6b6b;
+    }
+    50% {
+        transform: scale(1.05);
+        color: #ee5a24;
+    }
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .inactivity-dialog {
+        width: 95%;
+        margin: 1rem;
+    }
+    
+    .dialog-header {
+        padding: 1rem;
+    }
+    
+    .dialog-header h2 {
+        font-size: 1.25rem;
+    }
+    
+    .warning-icon {
+        font-size: 2rem;
+    }
+    
+    .dialog-content {
+        padding: 1.5rem;
+    }
+    
+    .countdown-timer {
+        font-size: 2.5rem;
+        margin: 1rem 0;
+    }
+    
+    .dialog-actions {
+        flex-direction: column;
+        padding: 0 1.5rem 1.5rem 1.5rem;
+    }
+    
+    .extend-button,
+    .logout-button {
+        flex: none;
+        width: 100%;
+    }
+    
+    .dialog-footer {
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .inactivity-dialog {
+        border: 2px solid #000;
+    }
+    
+    .countdown-timer {
+        text-shadow: none;
+        border: 2px solid #ff6b6b;
+        padding: 0.5rem;
+    }
+}
