@@ -66,6 +66,10 @@ const UserInfo = () => {
 
     return (
         <div className="user-info">
+            <div className="widget-header">
+                <h3>👤 User Profile</h3>
+            </div>
+            
             <div className="user-header">
                 <div className="user-avatar">
                     {user.image ? (

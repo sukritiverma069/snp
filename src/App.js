@@ -10,14 +10,14 @@ import { useAuth } from './stores';
 import useInactivityHook from './hooks/useInactivityHook';
 
 function App() {
-  const { isAuthenticated, authActions } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const {
     showDialog,
     timeLeft,
     extendSession,
     forceLogout
-  } = useInactivityHook(2* 1000);
+  } = useInactivityHook(20 * 60 * 1000);
 
   const handleExtendSession = () => {
     extendSession();

@@ -8,35 +8,76 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import PersistentTimer from "../../components/PersistenTimer";
 import DropZone from "../../components/DropZone";
 import Widget from "../../components/Widget";
+import WeatherWidget from "../../components/WeatherWidget";
+import TodoWidget from "../../components/TodoWidget";
 
 const defaultWidgets = [
-  { id: "timer", content: <PersistentTimer /> },
-  { id: "userinfo", content: <UserInfo /> },
+  { id: "timer" },
+  { id: "userinfo" },
+  { id: "weather" },
+  { id: "todo" },
 ];
 
+const getWidgetContent = (id) => {
+  switch (id) {
+    case "timer":
+      return <PersistentTimer />;
+    case "userinfo":
+      return <UserInfo />;
+    case "weather":
+      return <WeatherWidget />;
+    case "todo":
+      return <TodoWidget />;
+    default:
+      return <div>Unknown widget</div>;
+  }
+};
+
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, userActions, isUserLoading } = useAuth();
   const navigate = useNavigate();
 
   const [widgets, setWidgets] = useState(defaultWidgets);
 
   useEffect(()=> {
-    const savedWidgets = localStorage.getItem("widgets");
-    if(savedWidgets){
-      setWidgets(JSON.parse(savedWidgets));
-    }else {
-      setWidgets(defaultWidgets);
+    // Don't run if user data is still loading or not available
+    if (isUserLoading || !user?.id) {
+      return;
     }
 
-  }, []);
+    const savedData = localStorage.getItem('savedWidgets');
+    
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      
+      if(user.id === parsedData?.userId && parsedData?.widgets){
+        setWidgets(parsedData.widgets);
+      } else {
+        localStorage.setItem('savedWidgets', JSON.stringify({userId: user.id, widgets: defaultWidgets}));
+        setWidgets(defaultWidgets);
+      }
+    } else {
+      localStorage.setItem('savedWidgets', JSON.stringify({userId: user.id, widgets: defaultWidgets}));
+      setWidgets(defaultWidgets);
+    }
+  }, [user?.id, isUserLoading]);
 
 
   const moveWidget = (item) => {
-
+    
     setWidgets((prev) => {
       const existing = prev.find((w) => w.id === item.id);
       const filtered = prev.filter((w) => w.id !== item.id);
-      return [...filtered, existing];
+      const newWidgets = [...filtered, existing];
+
+      const localStorageUserId = JSON.parse(localStorage.getItem('savedWidgets'))?.userId;
+      const widgetData = {
+        userId: localStorageUserId, 
+        widgets: newWidgets
+      };
+      localStorage.setItem('savedWidgets', JSON.stringify(widgetData));
+      
+      return newWidgets;
     });
   };
 
@@ -45,11 +86,22 @@ const Dashboard = () => {
     navigate("/login");
   };
 
+  const resetWidgetOrder = () => {
+    if (user?.id) {
+      setWidgets(defaultWidgets);
+      localStorage.setItem('savedWidgets', JSON.stringify({
+        userId: user.id, 
+        widgets: defaultWidgets
+      }));
+      
+    }
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="dashboard">
         <header className="dashboard-header">
-          <h1>Welcome to SNP Assignment</h1>
+          <h1>Welcome!</h1>
           <div className="header-right">
             <div className="user-greeting">
               Hello, {user?.firstName} {user?.lastName}!
@@ -59,53 +111,27 @@ const Dashboard = () => {
             </button>
           </div>
         </header>
-        <main>
-          <div style={{ width: "400px", margin: "20px auto" }}>
-            <h2>Customizable Dashboard</h2>
-            {widgets.map((w) => (
-              <DropZone key={w.id} onDrop={moveWidget}>
-                <Widget id={w.id}>{w.content}</Widget>
-              </DropZone>
-            ))}
+        <main className="dashboard-main">
+          <div className="dashboard-content">
+            <div className="widgets-header">
+              <h2>Customizable Dashboard</h2>
+              <button 
+                onClick={resetWidgetOrder}
+                className="reset-layout-btn"
+                title="Reset widget order to default"
+              >
+                Reset Layout
+              </button>
+            </div>
+            <div className="widgets-grid">
+              {widgets.map((w) => (
+                <DropZone key={w.id} onDrop={moveWidget}>
+                  <Widget id={w.id}>{getWidgetContent(w.id)}</Widget>
+                </DropZone>
+              ))}
+            </div>
           </div>
         </main>
-
-        {/* <main className="dashboard-main">
-          <div className="dashboard-content">
-            <div className="welcome-section">
-              <h2>Dashboard</h2>
-              <p>
-                Welcome to your personal dashboard. Here you can manage your
-                profile and view your information.
-              </p>
-            </div>
-
-            <div className="quick-actions">
-              <h3>Quick Actions</h3>
-              <div className="action-cards">
-                <div className="action-card" onClick={goToProfile}>
-                  <div className="card-icon">👤</div>
-                  <h4>View Profile</h4>
-                  <p>See and manage your profile information</p>
-                </div>
-
-                <div className="action-card">
-                  <div className="card-icon">⚙️</div>
-                  <h4>Settings</h4>
-                  <p>Manage your account settings</p>
-                </div>
-
-                <div className="action-card">
-                  <div className="card-icon">📊</div>
-                  <h4>Analytics</h4>
-                  <p>View your activity analytics</p>
-                </div>
-              </div>
-            </div>
-
-            <UserInfo />
-          </div>
-        </main> */}
       </div>
     </DndProvider>
   );

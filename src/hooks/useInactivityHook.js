@@ -8,9 +8,9 @@ const useInactivityHook = (sessionDuration = 2 * 1000) => {
 
   const extendSession = async () => {
     try {
-      await authActions.extendSession();
+    await authActions.extendSession();
     setShowDialog(false);
-    setTimeLeft(60);
+    setTimeLeft(5);
     } catch (error) {
       forceLogout();
     }
@@ -26,6 +26,9 @@ const useInactivityHook = (sessionDuration = 2 * 1000) => {
       let timer;
 
       const resetTimer = () => {
+        // Don't reset if dialog is already showing and countdown is active
+        if (showDialog) return;
+        
         clearTimeout(timer);
 
          timer = setTimeout(() => {
@@ -47,7 +50,7 @@ const useInactivityHook = (sessionDuration = 2 * 1000) => {
         events.forEach((e) => window.removeEventListener(e, resetTimer));
       };
     }
-   }, [isAuthenticated, sessionDuration]);
+   }, [isAuthenticated, sessionDuration, showDialog]);
 
    useEffect(() => {
      let countdownTimer;
@@ -70,7 +73,7 @@ const useInactivityHook = (sessionDuration = 2 * 1000) => {
          clearInterval(countdownTimer);
        }
      };
-   }, [showDialog, timeLeft, logout]);
+   }, [showDialog, logout]);
 
    return {
      showDialog,

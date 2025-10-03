@@ -10,9 +10,9 @@ export const useAuth = () => {
     isAuthenticated: authStore.isAuthenticated,
     accessToken: authStore.accessToken,
     isLoading: authStore.isLoading || userStore.isLoading,
+    isUserLoading: userStore.isLoading,
     error: authStore.error || userStore.error,
     
-    // User data
     user: userStore.user,
     
     // Combined actions
@@ -26,13 +26,11 @@ export const useAuth = () => {
       userStore.clearUser();
     },
     
-    // Helper methods
     getUserDisplayName: userStore.getUserDisplayName,
     getUserInitials: userStore.getUserInitials,
     getAuthHeader: authStore.getAuthHeader,
     isTokenExpired: authStore.isTokenExpired,
     
-    // Individual store actions (if needed)
     authActions: {
       setLoading: authStore.setLoading,
       setError: authStore.setError,
@@ -48,7 +46,6 @@ export const useAuth = () => {
       setError: userStore.setError,
       clearError: userStore.clearError,
       setUser: userStore.setUser,
-      updateUser: userStore.updateUser,
       clearUser: userStore.clearUser,
     },
   };
