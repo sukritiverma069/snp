@@ -35,6 +35,7 @@ export const useAuthStore = create(
         localStorage.removeItem('auth-storage');
         localStorage.removeItem('user-storage');
         localStorage.removeItem('timeOnMount');
+        localStorage.removeItem('pageOpenTime');
         
         set({
           isAuthenticated: false,
@@ -51,33 +52,6 @@ export const useAuthStore = create(
         set({ accessToken, tokenExpiry });
       },
 
-      extendSession: async () => {
-        const { refreshToken } = get();
-        if (!refreshToken) {
-          throw new Error('No refresh token available');
-        }
-
-        try {
-          set({ isLoading: true, error: null });
-          
-          const { refreshAccessToken } = await import('../services/authService');
-          const tokenData = await refreshAccessToken(refreshToken);
-          
-          const tokenExpiry = tokenData.expiresIn ? Date.now() + (tokenData.expiresIn * 1000) : null;
-          set({
-            accessToken: tokenData.accessToken,
-            refreshToken: tokenData.refreshToken || refreshToken,
-            isLoading: false,
-            error: null
-          });
-
-          return tokenData;
-        } catch (error) {
-          console.error('Session extension failed:', error);
-          set({ error: error.message, isLoading: false });
-          throw error;
-        }
-      },
 
       isTokenExpired: () => {
         const { tokenExpiry } = get();

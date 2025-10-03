@@ -3,8 +3,8 @@ import { useDrag } from "react-dnd";
 
 const Widget = ({ id, children }) => {
   const [{ isDragging }, dragRef] = useDrag(() => ({
-    type: "WIDGET",   // Must match droppable type
-    item: { id },     // Info about the dragged item
+    type: "WIDGET",
+    item: { id },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),

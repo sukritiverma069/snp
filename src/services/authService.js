@@ -8,7 +8,6 @@ export const loginUser = async (username, password) => {
             password,
         });
         
-        console.log('Login successful:', loginData);
         return loginData;
     } catch (error) {
         console.error('Login failed:', error);
@@ -16,26 +15,14 @@ export const loginUser = async (username, password) => {
     }
 };
 
-export const authenticateUser = async (username, password) => {
-    try {        
-        const loginData = await loginUser(username, password);
-        
-        return {
-            loginData,
-        };
-    } catch (error) {
-        console.error('Authentication failed:', error);
-        throw error;
-    }
-};
 
 export const refreshAccessToken = async (refreshToken) => {
     try {
         const tokenData = await apiPost('/auth/refresh', {
             refreshToken,
+            expiresInMins: 30
         });
         
-        console.log('Token refreshed:', tokenData);
         return tokenData;
     } catch (error) {
         console.error('Token refresh failed:', error);

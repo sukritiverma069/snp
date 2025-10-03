@@ -4,9 +4,8 @@ import './TodoWidget.css';
 const TodoWidget = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
-  const [filter, setFilter] = useState('all'); // all, active, completed
+  const [filter, setFilter] = useState('all');
 
-  // Load todos from localStorage on component mount
   useEffect(() => {
     const savedTodos = localStorage.getItem('todoWidgetTasks');
     if (savedTodos) {
@@ -14,7 +13,6 @@ const TodoWidget = () => {
     }
   }, []);
 
-  // Save todos to localStorage whenever todos change
   useEffect(() => {
     localStorage.setItem('todoWidgetTasks', JSON.stringify(todos));
   }, [todos]);
@@ -65,7 +63,7 @@ const TodoWidget = () => {
   return (
     <div className="todo-widget">
       <div className="todo-header">
-        <h3>📝 Todo List</h3>
+        <h3> Todo List</h3>
         <div className="todo-stats">
           <span className="stat active">{activeCount} active</span>
           <span className="stat completed">{completedCount} done</span>
@@ -111,10 +109,10 @@ const TodoWidget = () => {
         {filteredTodos.length === 0 ? (
           <div className="empty-state">
             {filter === 'all' && todos.length === 0 && (
-              <p>No tasks yet. Add one above! 🎯</p>
+              <p>No tasks yet. Add one above!</p>
             )}
             {filter === 'active' && activeCount === 0 && (
-              <p>No active tasks! 🎉</p>
+              <p>No active tasks!</p>
             )}
             {filter === 'completed' && completedCount === 0 && (
               <p>No completed tasks yet.</p>

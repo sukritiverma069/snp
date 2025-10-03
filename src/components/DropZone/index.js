@@ -1,24 +1,34 @@
 import React from "react";
 import { useDrop } from "react-dnd";
 
-const DropZone = ({ onDrop, children }) => {
-  const [{ isOver }, dropRef] = useDrop(() => ({
+const DropZone = ({ onDrop, children, index }) => {
+  const [{ isOver, canDrop }, dropRef] = useDrop(() => ({
     accept: "WIDGET",
-    drop: (item) => onDrop(item),
+    drop: (item, monitor) => {
+      if (monitor.didDrop()) {
+        return;
+      }
+      onDrop(item, index);
+    },
     collect: (monitor) => ({
-      isOver: monitor.isOver(),
+      isOver: monitor.isOver({ shallow: true }),
+      canDrop: monitor.canDrop(),
     }),
   }));
+
+  const isActive = isOver && canDrop;
 
   return (
     <div
       ref={dropRef}
       style={{
-        minHeight: "100px",
-        border: "2px dashed gray",
-        margin: "8px 0",
-        backgroundColor: isOver ? "#e0f7fa" : "transparent",
-        transition: "0.3s",
+        minHeight: "fit-content",
+        border: isActive ? "2px dashed #4a90e2" : "2px dashed transparent",
+        borderRadius: "12px",
+        padding: "4px",
+        backgroundColor: isActive ? "rgba(74, 144, 226, 0.1)" : "transparent",
+        transition: "all 0.3s ease",
+        position: "relative",
       }}
     >
       {children}

@@ -25,14 +25,6 @@ export const useUserStore = create(
         isLoading: false,
       }),
 
-      getUserDisplayName: () => {
-        const { user } = get();
-        if (!user) return 'Guest';
-        return user.firstName && user.lastName 
-          ? `${user.firstName} ${user.lastName}`
-          : user.username || user.email || 'User';
-      },
-
     }),
     {
       name: 'user-storage', // localStorage key

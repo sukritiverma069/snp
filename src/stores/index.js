@@ -9,6 +9,7 @@ export const useAuth = () => {
   return {
     isAuthenticated: authStore.isAuthenticated,
     accessToken: authStore.accessToken,
+    refreshToken: authStore.refreshToken,
     isLoading: authStore.isLoading || userStore.isLoading,
     isUserLoading: userStore.isLoading,
     error: authStore.error || userStore.error,
@@ -26,9 +27,7 @@ export const useAuth = () => {
       userStore.clearUser();
     },
     
-    getUserDisplayName: userStore.getUserDisplayName,
     getUserInitials: userStore.getUserInitials,
-    getAuthHeader: authStore.getAuthHeader,
     isTokenExpired: authStore.isTokenExpired,
     
     authActions: {
@@ -38,7 +37,6 @@ export const useAuth = () => {
       setAuth: authStore.setAuth,
       clearAuth: authStore.clearAuth,
       updateAccessToken: authStore.updateAccessToken,
-      extendSession: authStore.extendSession,
     },
     
     userActions: {

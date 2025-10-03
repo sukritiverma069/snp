@@ -1,17 +1,35 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../stores";
+import { refreshAccessToken } from "../services/authService";
 
 const useInactivityHook = (sessionDuration = 2 * 1000) => {
-  const { isAuthenticated, logout, authActions } = useAuth();
+  const { isAuthenticated, logout, authActions, refreshToken } = useAuth();
   const [showDialog, setShowDialog] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(5);
+  const [timeLeft, setTimeLeft] = useState(60);
 
   const extendSession = async () => {
     try {
-    await authActions.extendSession();
-    setShowDialog(false);
-    setTimeLeft(5);
+      if (!refreshToken) {
+        throw new Error('No refresh token available');
+      }
+
+      authActions.setLoading(true);
+      const tokenData = await refreshAccessToken(refreshToken);
+      authActions.updateAccessToken(tokenData.accessToken, tokenData.expiresIn);
+      
+      if (tokenData.refreshToken && tokenData.refreshToken !== refreshToken) {
+        authActions.setAuth({
+          accessToken: tokenData.accessToken,
+          refreshToken: tokenData.refreshToken,
+          expiresIn: tokenData.expiresIn
+        });
+      }
+      
+      setShowDialog(false);
+      setTimeLeft(60);
+      authActions.setLoading(false);
     } catch (error) {
+      authActions.setLoading(false);
       forceLogout();
     }
   }
@@ -26,14 +44,13 @@ const useInactivityHook = (sessionDuration = 2 * 1000) => {
       let timer;
 
       const resetTimer = () => {
-        // Don't reset if dialog is already showing and countdown is active
         if (showDialog) return;
         
         clearTimeout(timer);
 
          timer = setTimeout(() => {
            setShowDialog(true);
-           setTimeLeft(5);
+           setTimeLeft(60);
          }, sessionDuration);
       };
 

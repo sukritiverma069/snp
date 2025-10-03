@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './WeatherWidget.css';
+import { getWeatherData, validateLocation, formatTemperature, getWeatherIcon } from '../../services/weatherService';
 
 const WeatherWidget = () => {
   const [weather, setWeather] = useState(null);
@@ -7,41 +8,19 @@ const WeatherWidget = () => {
   const [error, setError] = useState(null);
   const [location, setLocation] = useState('New York');
 
-  // Using OpenWeatherMap API (you'll need to get a free API key)
+  // You can set your OpenWeatherMap API key here
   const API_KEY = 'demo'; // Replace with actual API key
-  const API_URL = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${API_KEY}&units=metric`;
 
   const fetchWeather = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // For demo purposes, using mock data since API key is not provided
-      // In real implementation, uncomment the fetch call below
-      /*
-      const response = await fetch(API_URL);
-      if (!response.ok) throw new Error('Weather data not available');
-      const data = await response.json();
-      */
+      if (!validateLocation(location)) {
+        throw new Error('Please enter a valid city name');
+      }
       
-      // Mock weather data for demo
-      const data = {
-        name: location,
-        main: {
-          temp: Math.floor(Math.random() * 30) + 5,
-          feels_like: Math.floor(Math.random() * 30) + 5,
-          humidity: Math.floor(Math.random() * 40) + 40
-        },
-        weather: [{
-          main: ['Sunny', 'Cloudy', 'Rainy', 'Snowy'][Math.floor(Math.random() * 4)],
-          description: 'clear sky',
-          icon: '01d'
-        }],
-        wind: {
-          speed: Math.floor(Math.random() * 10) + 1
-        }
-      };
-      
+      const data = await getWeatherData(location, API_KEY);
       setWeather(data);
     } catch (err) {
       setError(err.message);
@@ -57,19 +36,11 @@ const WeatherWidget = () => {
   const handleLocationChange = (e) => {
     e.preventDefault();
     const newLocation = e.target.location.value.trim();
-    if (newLocation) {
+    if (validateLocation(newLocation)) {
       setLocation(newLocation);
+    } else {
+      setError('Please enter a valid city name');
     }
-  };
-
-  const getWeatherIcon = (condition) => {
-    const icons = {
-      'Sunny': '☀️',
-      'Cloudy': '☁️',
-      'Rainy': '🌧️',
-      'Snowy': '❄️'
-    };
-    return icons[condition] || '🌤️';
   };
 
   if (loading) {
@@ -123,7 +94,7 @@ const WeatherWidget = () => {
               {getWeatherIcon(weather.weather[0].main)}
             </div>
             <div className="weather-temp">
-              <span className="temp">{Math.round(weather.main.temp)}°C</span>
+              <span className="temp">{formatTemperature(weather.main.temp)}</span>
               <span className="location-name">{weather.name}</span>
             </div>
           </div>
@@ -131,7 +102,7 @@ const WeatherWidget = () => {
           <div className="weather-details">
             <div className="weather-item">
               <span className="label">Feels like:</span>
-              <span className="value">{Math.round(weather.main.feels_like)}°C</span>
+              <span className="value">{formatTemperature(weather.main.feels_like)}</span>
             </div>
             <div className="weather-item">
               <span className="label">Humidity:</span>

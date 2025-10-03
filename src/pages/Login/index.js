@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import './Login.css'
-import { authenticateUser } from '../../services/authService'
+import { loginUser } from '../../services/authService'
 import { useAuth } from '../../stores'
 
 const Login = () => {
@@ -43,17 +43,9 @@ const Login = () => {
 
         try {
             authActions.setLoading(true);
-
-            const { loginData, userData } = await authenticateUser(username, password);
-            
-
-            console.log("Authentication successful:", { loginData, userData });
-            
-            // Store authentication data in Zustand stores
-            await login(loginData, userData);
-            
+            const loginData = await loginUser(username, password);
+            await login(loginData);           
             navigate(from, { replace: true });
-            console.log(`User logged in successfully! Navigated to ${from}`);
 
         } catch (error) {
             console.error('Authentication failed:', error);

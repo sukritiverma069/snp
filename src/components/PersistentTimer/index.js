@@ -25,7 +25,6 @@ const PersistentTimer = () => {
     };
 
     useEffect(() => {
-        // Initialize or get existing start time
         let startTime = localStorage.getItem('pageOpenTime');
         if (!startTime) {
             const currentTime = new Date();
@@ -33,13 +32,11 @@ const PersistentTimer = () => {
             localStorage.setItem('pageOpenTime', startTime);
         }
 
-        // Update display every second
         const interval = setInterval(() => {
             setDisplayStartTime(new Date().toLocaleTimeString());
             calculateElapsedTime();
         }, 1000);
 
-        // Calculate initial elapsed time
         calculateElapsedTime();
 
         return () => clearInterval(interval);
@@ -48,7 +45,7 @@ const PersistentTimer = () => {
     return (
         <div className="persistent-timer">
             <div className="timer-header">
-                <h3>⏱️ Page Timer</h3>
+                <h3> Page Timer</h3>
                 <div className="current-time">
                     {displayStartTime}
                 </div>
@@ -67,7 +64,7 @@ const PersistentTimer = () => {
                 </div>
                 
                 <button onClick={resetTimer} className="reset-button">
-                    🔄 Reset Timer
+                 Reset Timer
                 </button>
             </div>
         </div>
