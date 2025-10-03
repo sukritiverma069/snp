@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Login from './pages/Login';
-import UserInfo from './pages/UserInfo';
+import UserInfo from './components/UserInfo';
 import Dashboard from './pages/Dashboard';
 import InactivityDialog from './components/InactivityDialog';
 import { ProtectedRoute } from './routes';

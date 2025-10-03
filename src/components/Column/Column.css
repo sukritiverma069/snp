@@ -1,0 +1,52 @@
+/* Dashboard Grid Layout */
+.dashboard-grid {
+  display: grid;
+  gap: 48px;
+  width: 100%;
+  padding: 40px;
+  background: #f8f9fa;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+
+/* Responsive Grid Columns */
+@media (min-width: 1600px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    padding: 48px;
+    gap: 56px;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    padding: 40px;
+    gap: 48px;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1199px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    padding: 32px;
+    gap: 40px;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 899px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    padding: 24px;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 599px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 28px;
+  }
+}

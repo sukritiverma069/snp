@@ -20,7 +20,6 @@ export const refreshAccessToken = async (refreshToken) => {
     try {
         const tokenData = await apiPost('/auth/refresh', {
             refreshToken,
-            expiresInMins: 30
         });
         
         return tokenData;

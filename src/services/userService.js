@@ -7,7 +7,6 @@ export const getCurrentUserData = async (accessToken) => {
             'Authorization': `Bearer ${accessToken}`,
         });
         
-        console.log('Current user data retrieved:', userData);
         return userData;
     } catch (error) {
         console.error('Failed to get current user:', error);
