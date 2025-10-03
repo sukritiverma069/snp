@@ -38,15 +38,12 @@ const Widget = ({ id, children }) => {
   return (
     <div
       ref={setNodeRef}
-      style={{
-        ...style,
-        cursor: isDragging ? 'grabbing' : 'grab',
-      }}
+      style={style}
       {...attributes}
-      {...listeners}
     >
-      {/* Drag Handle - Visual Indicator Only */}
+      {/* Drag Handle - Functional drag area */}
       <div
+        {...listeners}
         style={{
           position: 'absolute',
           top: '8px',
@@ -60,9 +57,19 @@ const Widget = ({ id, children }) => {
           backgroundColor: 'rgba(255, 255, 255, 0.9)',
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
           border: '1px solid rgba(0, 0, 0, 0.1)',
-          pointerEvents: 'none', // Don't interfere with drag events
+          cursor: isDragging ? 'grabbing' : 'grab',
         }}
         title="Drag to reorder"
+        onMouseEnter={(e) => {
+          e.currentTarget.style.color = '#2d3748';
+          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 1)';
+          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.color = '#4a5568';
+          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+          e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
+        }}
       >
         <DragHandleDots2Icon width={16} height={16} />
       </div>

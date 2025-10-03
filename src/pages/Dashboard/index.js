@@ -14,11 +14,10 @@ const defaultWidgets = [
 
 
 const Dashboard = () => {
-  const { user, logout, userActions, isUserLoading } = useAuth();
+  const { user, logout, isUserLoading } = useAuth();
   const navigate = useNavigate();
 
   const [widgets, setWidgets] = useState(() => {
-    console.log("checking if this is recalled");
     const savedData = localStorage.getItem("savedWidgets");
     if (savedData) {
       try {
@@ -34,8 +33,6 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    console.log("inside useEffect");
-    // Don't run if user data is still loading or not available
     if (isUserLoading || !user?.id) {
       return;
     }
@@ -61,7 +58,6 @@ const Dashboard = () => {
             return currentWidgets;
           });
         } else {
-          // Different user or invalid data - initialize with defaults
           const defaultWidgetsData = {
             userId: user.id,
             widgets: defaultWidgets,
@@ -74,7 +70,6 @@ const Dashboard = () => {
         }
       } catch (parseError) {
         console.error("Error parsing saved widgets:", parseError);
-        // Reset to defaults on parse error
         const defaultWidgetsData = { userId: user.id, widgets: defaultWidgets };
         localStorage.setItem(
           "savedWidgets",
@@ -83,7 +78,6 @@ const Dashboard = () => {
         setWidgets(defaultWidgets);
       }
     } else {
-      // No saved data - initialize with defaults
       const defaultWidgetsData = { userId: user.id, widgets: defaultWidgets };
       localStorage.setItem("savedWidgets", JSON.stringify(defaultWidgetsData));
       setWidgets(defaultWidgets);
@@ -105,12 +99,10 @@ const Dashboard = () => {
         return currentWidgets;
       }
 
-      // Create new array with reordered widgets
       const newWidgets = [...currentWidgets];
       const [movedWidget] = newWidgets.splice(activeIndex, 1);
       newWidgets.splice(overIndex, 0, movedWidget);
       
-      // Save to localStorage
       if (user?.id) {
         const widgetData = {
           userId: user.id,
